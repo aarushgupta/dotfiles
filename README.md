@@ -3,7 +3,9 @@
 Personal dotfiles for remote dev environments. Point your platform's dotfiles setting at
 `aarushgupta/dotfiles`; it clones the repo on every boot and runs `install.sh`.
 
-Use `owner/repo` or an HTTPS URL — SSH URLs can't authenticate in a container.
+Use the full HTTPS URL (`https://github.com/aarushgupta/dotfiles`) — some hosts expand the
+`owner/repo` short form, but Coder's `coder dotfiles` passes the string straight to `git clone`,
+which reads it as a local path. SSH URLs can't authenticate in a container.
 
 | file | what it does |
 | --- | --- |
