@@ -43,4 +43,13 @@ if [ -e "$HOME/.config/nvim/init.lua" ] && [ ! -L "$HOME/.config/nvim/init.lua" 
 fi
 ln -sfn "$REPO/nvim/init.lua" "$HOME/.config/nvim/init.lua"
 
+# Claude Code user memory. Single-file symlink only: hosts may own other files
+# in ~/.claude (statusline, hooks, skills), so never touch the directory itself.
+mkdir -p "$HOME/.claude"
+if [ -e "$HOME/.claude/CLAUDE.md" ] && [ ! -L "$HOME/.claude/CLAUDE.md" ]; then
+  mv "$HOME/.claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md.bak"
+  echo "backed up existing CLAUDE.md"
+fi
+ln -sfn "$REPO/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+
 exec "$REPO/personalize.sh"
