@@ -43,4 +43,15 @@ if [ -e "$HOME/.config/nvim/init.lua" ] && [ ! -L "$HOME/.config/nvim/init.lua" 
 fi
 ln -sfn "$REPO/nvim/init.lua" "$HOME/.config/nvim/init.lua"
 
+# Heal damage from an older revision that symlinked ~/.claude/CLAUDE.md into the
+# checkout: hosts regenerate that file at boot, and writing through the symlink
+# after the checkout moved could crash startup. Only touches a dangling symlink.
+if [ -L "$HOME/.claude/CLAUDE.md" ] && [ ! -e "$HOME/.claude/CLAUDE.md" ]; then
+  rm -f "$HOME/.claude/CLAUDE.md"
+  if [ -f "$HOME/.claude/CLAUDE.md.bak" ]; then
+    mv "$HOME/.claude/CLAUDE.md.bak" "$HOME/.claude/CLAUDE.md"
+  fi
+  echo "removed dangling CLAUDE.md symlink"
+fi
+
 exec "$REPO/personalize.sh"
