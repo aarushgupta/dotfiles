@@ -13,7 +13,6 @@ which reads it as a local path. SSH URLs can't authenticate in a container.
 | `.bashrc` | hands interactive bash to zsh |
 | `gitignore_global` | python/ML ignores, wired via `core.excludesfile` |
 | `nvim/init.lua` | lazy.nvim + nvim-cmp + pyright LSP |
-| `claude/CLAUDE.md` | Claude Code user memory, linked to `~/.claude/CLAUDE.md` |
 | `install.sh` | appends source lines, sets git config, links nvim, then runs `personalize.sh` |
 | `personalize.sh` | idempotent: oh-my-zsh + plugins, neovim, `chsh` to zsh |
 
