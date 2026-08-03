@@ -29,8 +29,16 @@ if ! command -v nvim >/dev/null 2>&1; then
 fi
 
 # Default shell -> zsh. /etc/passwd is image state, so this re-applies after a rebuild.
+# Exception: hosts that run an agent inside the pod export DOTFILES_REPO when applying
+# dotfiles; their terminal/tmux/ssh plumbing assumes bash, so never claim the shell there,
+# and undo the takeover if an older revision of this script already did.
 zsh_path="$(command -v zsh || true)"
-if [ -n "$zsh_path" ] && [ "$(getent passwd "$(id -un)" | cut -d: -f7)" != "$zsh_path" ]; then
+login_shell="$(getent passwd "$(id -un)" | cut -d: -f7)"
+if [ -n "${DOTFILES_REPO:-}" ]; then
+  if [ -n "$zsh_path" ] && [ "$login_shell" = "$zsh_path" ]; then
+    chsh -s "$(command -v bash)" "$(id -un)" 2>/dev/null || warn "chsh back to bash failed"
+  fi
+elif [ -n "$zsh_path" ] && [ "$login_shell" != "$zsh_path" ]; then
   chsh -s "$zsh_path" "$(id -un)" 2>/dev/null || warn "chsh to $zsh_path failed"
 fi
 
